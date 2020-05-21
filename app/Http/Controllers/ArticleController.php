@@ -29,8 +29,17 @@ class ArticleController extends Controller
 
     public function index()
     {
+        if(request('tag')){
+
+            $articles=Tag::where('name',request('tag'))->firstorfail()->articles;
+        }
+        else
+        {
+            $articles = Article::latest()->get();
+
+        }
+        
         //Render a list of a resource
-        $articles = Article::latest()->get();
         return view('articles.index', ['articles'=>$articles]);
     }
     public function show(Article $article)
