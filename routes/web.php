@@ -21,5 +21,9 @@ Route::get('/about', function () {
     ]);
 });
 
-ROute::get('/article', 'ArticleController@index');
-ROute::get('/articles/{article}', 'ArticleController@show')->name('article.show');
+Route::get('/articles', 'ArticleController@index');
+Route::post('/articles','ArticleController@store');
+Route::get('/articles/create','ArticleController@create');
+Route::get('/articles/{article}', 'ArticleController@show')->name('article.show');
+Route::get('/articles/{article}/edit','ArticleController@edit');
+Route::put('/articles/{article}','ArticleController@update');

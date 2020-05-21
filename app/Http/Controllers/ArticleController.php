@@ -24,18 +24,69 @@ class ArticleController extends Controller
      */
     public function __construct()
     {
-        
+
     }
 
     public function index()
     {
-        $articles       = \App\Article::get();
-        return view('about', compact('articles'));
+        //Render a list of a resource
+        $articles = Article::latest()->get();
+        return view('articles.index', ['articles'=>$articles]);
     }
-    public function show($id)
+    public function show(Article $article)
     {
-        $article=Article::find($id);
+        //show a single resource
         return view('articles.show',['article'=>$article]);
+    }
+    public function create(){
+  //shows a view to create a new resource
+ return view('articles.create');
+    }
+    public function store(){
+
+        Article::create(request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required' 
+        ]));
+
+       /* $validatedAttribute = request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required'
+
+        ]);
+        return $validatedAttribute;
+        Article::create($validatedAttribute);  //---we can use this in place of below
+        //dump(request()->all());  ---Json Format
+      
+        Article::create([
+            'title'=>request('title'),
+            'excerpt' => request('excerpt'),
+            'body' => request('body')
+ 
+        ]); */
+        return redirect ('/articles');
+    }
+    public function edit(Article $article){
+    // shows a view to edit an existing resouce
+         return view('articles.edit',compact('article'));
+
+    }
+    public function update(Article $article){
+
+        
+        Article::update(request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required' 
+        ]));
+        return redirect('/articles/'. $article->id);
+  
+    }
+    public function destroy(){
+    //delete the resource
+
     }
 }
 
