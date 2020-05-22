@@ -52,6 +52,23 @@
 
                             </div>
                     </div>
+
+                    <div class="field">
+                        <label class="label" for="body">Tags</lable>
+
+                            <div class="select is-multiple control">
+                                <select 
+                                name="tags[]"
+                                multiple>
+                                @foreach($tags as $tag)
+
+                                <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                @endforeach
+                                </select>
+                                @if ($errors->has('tag')) <p style="color:red;">{{ $errors->first('tag') }}</p> @endif <br>
+
+                            </div>
+                    </div>
                     <div class="field is-grouped">
                             <div class="control">
                                 <button class="button is-link" type="submit">Submit</button>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Article;
+use App\Tag;
 use App\Http\Controllers\Controller;
 
 class ArticleController extends Controller
@@ -38,7 +39,7 @@ class ArticleController extends Controller
             $articles = Article::latest()->get();
 
         }
-        
+         
         //Render a list of a resource
         return view('articles.index', ['articles'=>$articles]);
     }
@@ -48,18 +49,28 @@ class ArticleController extends Controller
         return view('articles.show',['article'=>$article]);
     }
     public function create(){
+
   //shows a view to create a new resource
- return view('articles.create');
+      return view('articles.create',[
+       'tags'=>tag::all()
+
+      ]);
     }
     public function store(){
+        
+        $this->validateArticle();
+        $article= new Article(request(['title','excerpt','body']));
+        $article->user_id=2;
+        $article->save();
 
-        Article::create(request()->validate([
+        $article->tags()->attach(request('tags'));
+      /*  Article::create(request()->validate([
             'title' => 'required',
             'excerpt' => 'required',
             'body' => 'required' 
         ]));
 
-       /* $validatedAttribute = request()->validate([
+       $validatedAttribute = request()->validate([
             'title' => 'required',
             'excerpt' => 'required',
             'body' => 'required'
@@ -75,7 +86,7 @@ class ArticleController extends Controller
             'body' => request('body')
  
         ]); */
-        return redirect ('/articles');
+        return redirect (route('articles.index'));
     }
     public function edit(Article $article){
     // shows a view to edit an existing resouce
@@ -96,6 +107,14 @@ class ArticleController extends Controller
     public function destroy(){
     //delete the resource
 
+    }
+    protected function validateArticle(){
+         return request()->validate([
+        'title' => 'required',
+        'excerpt' => 'required',
+        'body' => 'required' ,
+        'tag' =>'exists:tags,id'
+         ]);
     }
 }
 
